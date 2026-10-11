@@ -15,16 +15,6 @@ The project is configured for local development with Ganache and Truffle.
 - Displays the connected account, transaction status, and transaction hash.
 - Uses React 19 and Vite for a fast development experience.
 
-## Recommended GitHub project title
-
-**SimpleStorage DApp — MetaMask-Powered On-Chain Value Storage**
-
-Suggested repository name:
-
-```text
-simple-storage-dapp
-```
-
 ## Tech stack
 
 - **Frontend:** React 19
