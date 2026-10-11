@@ -1,0 +1,120 @@
+TRUFFLE / GANACHE / REACT COMMANDS
+==================================
+
+Project folder
+--------------
+cd "C:\Users\USER\Desktop\Blockchain"
+
+1. Start Ganache
+----------------
+Use Ganache Desktop with these settings:
+- RPC server: http://127.0.0.1:7545
+- Network ID: 5777
+
+Or start Ganache from PowerShell:
+
+npx ganache --server.host 127.0.0.1 --server.port 7545 --chain.networkId 5777
+
+Keep Ganache running in a separate terminal.
+
+2. Compile the smart contract
+------------------------------
+cd "C:\Users\USER\Desktop\Blockchain"
+npx truffle compile
+
+The compiled artifact is created here:
+build\contracts\SimpleStorage.json
+
+3. Deploy the smart contract
+-----------------------------
+npx truffle migrate --network development --reset
+
+To deploy without resetting previous migrations:
+npx truffle migrate --network development
+
+4. Run the automated tests
+--------------------------
+npx truffle test --network development
+
+Expected result:
+2 passing
+
+5. Test set/get from the Truffle console
+----------------------------------------
+npx truffle console --network development
+
+Run each command after the truffle(development)> prompt appears:
+
+var instance = await SimpleStorage.deployed()
+var transaction = await instance.set(42)
+transaction.tx
+(await instance.get()).toString()
+
+Expected value:
+'42'
+
+The set(42) call creates a blockchain transaction.
+The get() call is read-only and does not create a transaction.
+
+6. Inspect the transaction details
+----------------------------------
+In the Truffle console:
+
+web3.eth.getTransaction(transaction.tx)
+web3.eth.getTransactionReceipt(transaction.tx)
+
+Useful fields:
+- from: sender address
+- to: contract address
+- input: encoded function call data
+- gas: gas limit
+- gasPrice: gas price
+- blockNumber: confirmation block
+- status: transaction status
+- gasUsed: gas consumed
+
+7. Check the transaction in Ganache
+-----------------------------------
+1. Open Ganache.
+2. Select the Transactions tab.
+3. Find the CONTRACT CALL created by set(42).
+4. Click it to inspect the hash, sender, contract address, gas, input data, and status.
+
+The deployment appears as CONTRACT CREATION.
+The set(42) call appears as CONTRACT CALL.
+The get() call does not appear because it is read-only.
+
+8. Start the React interface
+----------------------------
+Open a second terminal:
+
+cd "C:\Users\USER\Desktop\Blockchain\simple-storage-dapp"
+npm install
+npm run dev
+
+Open the URL displayed by Vite, usually:
+http://localhost:5173
+
+The React application must use:
+- Contract artifact: ..\build\contracts\SimpleStorage.json
+- Network ID: 5777
+- RPC URL: http://127.0.0.1:7545
+
+9. Exit the Truffle console
+---------------------------
+.exit
+
+Troubleshooting
+---------------
+
+If Truffle cannot connect to Ganache:
+- Start Ganache first.
+- Confirm that Ganache uses port 7545.
+- Confirm that truffle-config.js uses network_id 5777.
+
+If "Identifier has already been declared" appears:
+- Do not redeclare instance.
+- Use a new variable name, for example:
+  var transaction2 = await instance.set(100)
+
+The uWS warning with newer Node.js versions can be ignored if the command completes successfully.
